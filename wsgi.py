@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Punto de entrada WSGI para despliegue."""
+"""Punto de entrada WSGI para despliegue (Render, Gunicorn, etc.)."""
 
-from inventarios_produccion.app import create_app
+import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env si existe (desarrollo local)
+load_dotenv()
+
+from app import create_app
 
 application = create_app()
 

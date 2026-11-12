@@ -1,0 +1,5 @@
+# Dependencias de producción para la app de planificación de inventarios
+flask>=3.1.3
+openpyxl>=3.1.5
+gunicorn>=22.0.0
+python-dotenv>=1.0.0
