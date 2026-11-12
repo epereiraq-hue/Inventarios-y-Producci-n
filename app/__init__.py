@@ -7,6 +7,11 @@ from flask import Flask
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Las plantillas HTML residen en src/inventarios_produccion/app/templates/
+TEMPLATES_DIR = os.path.normpath(
+    os.path.join(BASE_DIR, "..", "inventarios_produccion", "app", "templates")
+)
+
 
 def create_app():
     """Crea y configura la aplicación Flask.
@@ -15,7 +20,7 @@ def create_app():
     desde el archivo .env (variables de entorno).
     """
     app = Flask(__name__, instance_relative_config=True,
-                template_folder=os.path.join(BASE_DIR, "templates"))
+                template_folder=TEMPLATES_DIR)
 
     # Configuración básica
     app.config.from_mapping(
