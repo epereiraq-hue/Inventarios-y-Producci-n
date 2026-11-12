@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Las plantillas HTML residen en src/inventarios_produccion/app/templates/
 TEMPLATES_DIR = os.path.normpath(
-    os.path.join(BASE_DIR, "..", "inventarios_produccion", "app", "templates")
+    os.path.join(BASE_DIR, "..", "src", "inventarios_produccion", "app", "templates")
 )
 
 
