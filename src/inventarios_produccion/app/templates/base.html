@@ -210,8 +210,13 @@
             📦 Inventarios y Producción
         </a>
         <div class="navbar-nav">
-            <a href="/">Inicio</a>
-            <a href="/resultados">Resultados</a>
+            {% if session.usuario %}
+                <a href="/">Inicio</a>
+                <a href="/resultados">Resultados</a>
+                <a href="/salir" style="color: #fc8181;">Salir ({{ session.usuario }})</a>
+            {% else %}
+                <a href="/login">Iniciar Sesión</a>
+            {% endif %}
         </div>
     </nav>
 

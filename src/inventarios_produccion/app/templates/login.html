@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - Planificación de Inventarios{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 420px; margin: 2rem auto;">
+    <h1 class="page-title" style="text-align: center; margin-bottom: 1.5rem;">Iniciar Sesión</h1>
+
+    <form method="POST" action="/login">
+        <div style="margin-bottom: 1rem;">
+            <label for="usuario" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a5e;">Usuario</label>
+            <input type="text" id="usuario" name="usuario" required
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 1rem; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+            <label for="clave" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a5e;">Contraseña</label>
+            <input type="password" id="clave" name="clave" required
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 1rem; box-sizing: border-box;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Ingresar</button>
+    </form>
+</div>
+{% endblock %}
