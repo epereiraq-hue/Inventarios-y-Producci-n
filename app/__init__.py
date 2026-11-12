@@ -5,6 +5,8 @@ import os
 
 from flask import Flask
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def create_app():
     """Crea y configura la aplicación Flask.
@@ -12,7 +14,8 @@ def create_app():
     Registra los blueprints de los controladores y carga la configuración
     desde el archivo .env (variables de entorno).
     """
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True,
+                template_folder=os.path.join(BASE_DIR, "templates"))
 
     # Configuración básica
     app.config.from_mapping(
