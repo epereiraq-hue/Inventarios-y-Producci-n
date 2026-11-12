@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Planificación de Inventarios{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 class="page-title">Planificación y Control de Inventarios</h1>
+    <p class="page-subtitle">
+        Reporte automatizado de ventas e inventarios para reposición y proyección comercial.
+    </p>
+
+    <div class="card-text">
+        <p>Esta aplicación reemplaza el cálculo manual de reposición de inventario que se hacía en un archivo Excel hecho a mano.</p>
+        <p><strong>Objetivo:</strong> Proporcionar información lista para analizar por producto, familia, empresa y sucursal, con sugeridos de pedido basados en reglas de negocio determinísticas.</p>
+        <p><strong>Empresas:</strong> EMP1 (Petrini) y EMP2 (LCDT).</p>
+        <p><strong>Unidad de medida:</strong> Ventas en unidades, no en montos.</p>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="/api/reportes/preview" class="btn btn-primary">
+            📊 Ver Reporte de Inventarios
+        </a>
+        <a href="/api/agente-ia" class="btn btn-secondary" style="margin-left: 1rem;">
+            🤖 Agente de IA
+        </a>
+    </div>
+</div>
+{% endblock %}

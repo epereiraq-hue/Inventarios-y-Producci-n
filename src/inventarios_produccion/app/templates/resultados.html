@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados - Planificación de Inventarios{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 class="page-title">Reporte de Inventarios</h1>
+    <p class="page-subtitle">
+        Vista automatizada de ventas, existencias, clasificación y sugeridos de pedido.
+    </p>
+</div>
+
+<!-- Tablero de contadores grandes -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Tablero de Control</h2>
+    <div class="contadores-grid">
+        <div class="contador">
+            <div class="valor">{{ contadores.criticas }}</div>
+            <div class="etiqueta">Críticas</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ contadores.saludables }}</div>
+            <div class="etiqueta">Saludables</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ contadores.alerta }}</div>
+            <div class="etiqueta">Alerta</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ contadores.sobrestock }}</div>
+            <div class="etiqueta">Sobrestock</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ "{:,.0f}".format(contadores.inventario_total) }}</div>
+            <div class="etiqueta">Inventario Total (unidades)</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ "{:,.0f}".format(contadores.demanda_mensual) }}</div>
+            <div class="etiqueta">Demanda Mensual (unidades)</div>
+        </div>
+        <div class="contador">
+            <div class="valor">{{ contadores.meses_stock_global }}</div>
+            <div class="etiqueta">Meses Stock Global</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Filtros</h2>
+    <div class="filtros">
+        <input type="text" id="filtroProducto" placeholder="Buscar por producto..." onkeyup="filtrarTabla()">
+        <input type="text" id="filtroFamilia" placeholder="Filtrar por familia..." onkeyup="filtrarTabla()">
+        <input type="text" id="filtroEmpresa" placeholder="Filtrar por empresa..." onkeyup="filtrarTabla()">
+        <input type="text" id="filtroSucursal" placeholder="Filtrar por sucursal..." onkeyup="filtrarTabla()">
+        <button class="btn btn-secondary" onclick="limpiarFiltros()">Limpiar filtros</button>
+    </div>
+    <p id="contadorRegistros" style="margin-top: 1rem; font-weight: bold;"></p>
+</div>
+
+<!-- Tabla de resultados -->
+<div class="card">
+    <h2 class="card-title">Detalle por Producto</h2>
+    <div class="tabla-contenedor">
+        <table id="tablaResultados">
+            <thead>
+                <tr>
+                    <th>Origen</th>
+                    <th>Empresa</th>
+                    <th>Sucursal</th>
+                    <th>Item</th>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Familia</th>
+                    <th>Venta Mes 1</th>
+                    <th>Venta Mes 2</th>
+                    <th>Venta Mes 3</th>
+                    <th>Venta Mes 4</th>
+                    <th>Venta Mes 5</th>
+                    <th>Venta Mes 6</th>
+                    <th>Promedio Mensual</th>
+                    <th>Meses Stock</th>
+                    <th>Clasificación</th>
+                    <th>Acción Sugerida</th>
+                    <th>Sugerido Pedido</th>
+                    <th>Validaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in registros %}
+                <tr class="fila-{{ r.clasificacion|lower }}">
+                    <td>{{ r.origen_hoja }}</td>
+                    <td>{{ r.empresa }}</td>
+                    <td>{{ r.sucursal }}</td>
+                    <td>{{ r.item }}</td>
+                    <td><a href="/detalle/{{ r.item }}" class="enlace-detalle">{{ r.codigo }}</a></td>
+                    <td>{{ r.descripcion }}</td>
+                    <td>{{ r.familia }}</td>
+                    <td>{{ r.ventas_mes_1 }}</td>
+                    <td>{{ r.ventas_mes_2 }}</td>
+                    <td>{{ r.ventas_mes_3 }}</td>
+                    <td>{{ r.ventas_mes_4 }}</td>
+                    <td>{{ r.ventas_mes_5 }}</td>
+                    <td>{{ r.ventas_mes_6 }}</td>
+                    <td>{{ r.promedio_mensual }}</td>
+                    <td>{{ r.meses_stock_actual }}</td>
+                    <td><span class="badge-{{ r.clasificacion|lower }}">{{ r.clasificacion }}</span></td>
+                    <td>{{ r.accion_sugerida }}</td>
+                    <td>{{ r.sugerido_pedido }}</td>
+                    <td>{{ r.validaciones }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Datos para JavaScript -->
+<script>
+    const registrosData = {{ registros|tojson }};
+</script>
+
+<script>
+    function filtrarTabla() {
+        const filtroProducto = document.getElementById("filtroProducto").value.toLowerCase();
+        const filtroFamilia = document.getElementById("filtroFamilia").value.toLowerCase();
+        const filtroEmpresa = document.getElementById("filtroEmpresa").value.toLowerCase();
+        const filtroSucursal = document.getElementById("filtroSucursal").value.toLowerCase();
+
+        const filas = document.querySelectorAll("#tablaResultados tbody tr");
+        let visibles = 0;
+
+        filas.forEach(fila => {
+            const descripcion = fila.children[5]?.textContent?.toLowerCase() || "";
+            const familia = fila.children[6]?.textContent?.toLowerCase() || "";
+            const empresa = fila.children[1]?.textContent?.toLowerCase() || "";
+            const sucursal = fila.children[2]?.textContent?.toLowerCase() || "";
+
+            const coincide =
+                descripcion.includes(filtroProducto) &&
+                familia.includes(filtroFamilia) &&
+                empresa.includes(filtroEmpresa) &&
+                sucursal.includes(filtroSucursal);
+
+            fila.style.display = coincide ? "" : "none";
+            if (coincide) visibles++;
+        });
+
+        document.getElementById("contadorRegistros").textContent =
+            `Registros visibles: ${visibles} de ${filas.length}`;
+    }
+
+    function limpiarFiltros() {
+        document.getElementById("filtroProducto").value = "";
+        document.getElementById("filtroFamilia").value = "";
+        document.getElementById("filtroEmpresa").value = "";
+        document.getElementById("filtroSucursal").value = "";
+        filtrarTabla();
+    }
+</script>
+
+<style>
+    .contadores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .contador {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .contador .valor {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1a3a5e;
+    }
+
+    .contador .etiqueta {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+    .filtros {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .filtros input {
+        padding: 0.6rem 1rem;
+        border: 1px solid #cbd5e0;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        min-width: 180px;
+    }
+
+    .filtros input:focus {
+        outline: none;
+        border-color: #2c5282;
+        box-shadow: 0 0 0 2px rgba(44, 82, 130, 0.2);
+    }
+
+    .tabla-contenedor {
+        overflow-x: auto;
+        margin-top: 1rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #4a5568;
+        position: sticky;
+        top: 0;
+    }
+
+    tr:hover {
+        background: #f8fafc;
+    }
+
+    .badge-critico {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-saludable {
+        background: #c6f6d5;
+        color: #2f855a;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .badge-sin_datos {
+        background: #e2e8f0;
+        color: #718096;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .fila-sobrestock {
+        background: #fff5f5;
+    }
+
+    .enlace-detalle {
+        color: #2c5282;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .enlace-detalle:hover {
+        text-decoration: underline;
+        color: #1a3a5e;
+    }
+</style>
+{% endblock %}

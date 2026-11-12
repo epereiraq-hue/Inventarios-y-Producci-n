@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle - {{ registro.codigo }} - Planificación de Inventarios{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 class="page-title">Detalle del Producto</h1>
+    <p class="page-subtitle">
+        Información completa del producto, clasificación y sugerido de pedido.
+    </p>
+</div>
+
+<!-- Resumen del producto -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Datos del Producto</h2>
+    <div class="detalle-grid">
+        <div class="detalle-campo">
+            <label>Origen:</label>
+            <span>{{ registro.origen_hoja }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Empresa:</label>
+            <span>{{ registro.empresa }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Sucursal:</label>
+            <span>{{ registro.sucursal }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Item:</label>
+            <span>{{ registro.item }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Código Dynamics:</label>
+            <span>{{ registro.codigo }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Descripción:</label>
+            <span>{{ registro.descripcion }}</span>
+        </div>
+        <div class="detalle-campo">
+            <label>Familia:</label>
+            <span>{{ registro.familia }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Ventas mensuales -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Ventas Mensuales (Unidades)</h2>
+    <div class="ventas-grid">
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 1</div>
+            <div class="mes-valor">{{ registro.ventas_mes_1 }}</div>
+        </div>
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 2</div>
+            <div class="mes-valor">{{ registro.ventas_mes_2 }}</div>
+        </div>
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 3</div>
+            <div class="mes-valor">{{ registro.ventas_mes_3 }}</div>
+        </div>
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 4</div>
+            <div class="mes-valor">{{ registro.ventas_mes_4 }}</div>
+        </div>
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 5</div>
+            <div class="mes-valor">{{ registro.ventas_mes_5 }}</div>
+        </div>
+        <div class="venta-mes">
+            <div class="mes-etiqueta">Mes 6</div>
+            <div class="mes-valor">{{ registro.ventas_mes_6 }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Cálculos y clasificación -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Cálculos y Clasificación</h2>
+    <div class="calculos-grid">
+        <div class="calculo-campo">
+            <label>Promedio Mensual:</label>
+            <span>{{ registro.promedio_mensual }}</span>
+        </div>
+        <div class="calculo-campo">
+            <label>Meses de Stock Actual:</label>
+            <span>{{ registro.meses_stock_actual }}</span>
+        </div>
+        <div class="calculo-campo">
+            <label>Clasificación:</label>
+            <span class="badge-{{ registro.clasificacion|lower }}">{{ registro.clasificacion }}</span>
+        </div>
+        <div class="calculo-campo">
+            <label>Acción Sugerida:</label>
+            <span>{{ registro.accion_sugerida }}</span>
+        </div>
+        <div class="calculo-campo">
+            <label>Sugerido de Pedido:</label>
+            <span>{{ registro.sugerido_pedido }}</span>
+        </div>
+        <div class="calculo-campo">
+            <label>Origen del Cálculo:</label>
+            <span>{{ registro.origen_calculo }}</span>
+        </div>
+    </div>
+
+    {% if registro.validaciones %}
+    <div class="alertas">
+        <h3>Validaciones:</h3>
+        <ul>
+            {% for v in registro.validaciones.split(";") if v %}
+            <li class="alerta-item">{{ v }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Requerimiento de Logística -->
+{% if requerimiento %}
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Requerimiento de Producción - Logística</h2>
+    <div class="requerimiento-grid">
+        <div class="req-campo">
+            <label>Código Dynamics:</label>
+            <span>{{ requerimiento.codigo_dynamics }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Código Best:</label>
+            <span>{{ requerimiento.codigo_best }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Descripción:</label>
+            <span>{{ requerimiento.descripcion }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Requerimiento (unidades):</label>
+            <span>{{ requerimiento.requerimiento }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Proceso:</label>
+            <span>{{ requerimiento.proceso }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Importancia:</label>
+            <span>{{ requerimiento.importancia }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Comentario:</label>
+            <span>{{ requerimiento.comentario }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Días de Inventario:</label>
+            <span>{{ requerimiento.dias_inventario }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Estado:</label>
+            <span>{{ requerimiento.estado }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Responsable:</label>
+            <span>{{ requerimiento.responsable_proceso }}</span>
+        </div>
+        <div class="req-campo">
+            <label>Fecha Requerida:</label>
+            <span>{{ requerimiento.fecha_requerida }}</span>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card" style="margin-bottom: 2rem;">
+    <h2 class="card-title">Requerimiento de Producción - Logística</h2>
+    <p>No hay un requerimiento de logística asociado a este producto.</p>
+</div>
+{% endif %}
+
+<!-- Botón volver -->
+<div style="margin-top: 2rem;">
+    <a href="/resultados" class="btn btn-secondary">← Volver al Reporte</a>
+</div>
+
+<script>
+    // Resaltar la clasificación en la página
+    const badges = document.querySelectorAll('[class^="badge-"]');
+    badges.forEach(badge => {
+        badge.style.display = 'inline-block';
+        badge.style.padding = '0.25rem 0.75rem';
+        badge.style.borderRadius = '12px';
+        badge.style.fontSize = '0.85rem';
+        badge.style.fontWeight = '600';
+    });
+</script>
+
+<style>
+    .detalle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .detalle-campo {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .detalle-campo label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .detalle-campo span {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .ventas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .venta-mes {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .mes-etiqueta {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .mes-valor {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1a3a5e;
+    }
+
+    .calculos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .calculo-campo {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .calculo-campo label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .calculo-campo span {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .requerimiento-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .req-campo {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .req-campo label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .req-campo span {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .alertas {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 6px;
+    }
+
+    .alertas h3 {
+        margin-top: 0;
+        color: #92400e;
+        font-size: 1rem;
+    }
+
+    .alertas ul {
+        margin: 0.5rem 0 0 0;
+        padding-left: 1.5rem;
+    }
+
+    .alertas li {
+        color: #92400e;
+        margin-bottom: 0.25rem;
+    }
+
+    .alerta-item {
+        list-style-type: disc;
+    }
+</style>
+{% endblock %}
